@@ -1,0 +1,26 @@
+Добавлены файлы threemodule.js и OrbitControls.js в src/js/
+В файле src/index.html:11 добавлен класс nowheel
+В файле src/partial/hero удалено содержимое тегов и добавлены элементы: 
+      <h2 class="equipment__title" id="title" style="padding-top: 3%">Управляем климатом</h2>
+      <div id="container" style="position: absolute; top: 15%; left: 0%; align: center; width: 100%; height: 100%; display: block;"></div>
+      <button class="popular-item__theme" id="button" style="position: absolute; top: 90%; left: 45%; z-index: 10; transform: scale(1.5)">Перейт на сайт</button>
+В файле src/js/main.js:268 добавлена строка 
+      document.getElementById('button').addEventListener('click', () => { swiper.slideNext(500) });
+src/js/main.js:312
+      header.style.transform = "translateY(-100%)";
+src/js/main.js:330
+      } else if (instance.activeIndex == 0) {
+            header.style.transform = "translateY(-100%)";
+            menuBtn.removeEventListener("click", progressMenu);
+            menuBtn.addEventListener("click", defaultMenu);
+В файл src/partials/head.html добавлено:
+        <script type="importmap">
+			    {
+				    "imports": {
+					      "three": "https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js",
+					      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/",
+					        "controls/": "js/"
+				    }
+			    }
+		      </script>
+          <script type="module" src=js/threemodule.js>
