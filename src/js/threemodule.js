@@ -7,14 +7,17 @@
 
 			const table = [
 				'https://i.postimg.cc/9QRJC98f/IMG-7585.jpg',
-				'https://i.postimg.cc/P5gKxq9Q/IMG-7586.jpg',
 				'https://i.postimg.cc/MG15jS82/IMG-7587.jpg',
-				'https://i.postimg.cc/nzZk4PHs/IMG-7588.jpg',
-				'https://i.postimg.cc/qRLGjxR1/IMG-7589.jpg',
-				'https://i.postimg.cc/T13JS55f/IMG-7590.jpg',
-				'https://i.postimg.cc/zDxjh74B/IMG-7591.jpg',
-				'https://i.postimg.cc/Gtgx13vY/IMG-7592.jpg',
-				'https://i.postimg.cc/rFz9NWL9/IMG-7593.jpg'
+				'https://i.postimg.cc/P5gKxq9Q/IMG-7586.jpg',
+				'https://i.postimg.cc/QCF0Fk3L/IMG-7614.jpg',
+				'https://i.postimg.cc/NMJdGCZ7/IMG-7613.jpg',
+				'https://i.postimg.cc/ZRtd88pt/image.png',
+				'https://i.postimg.cc/9QRJC98f/IMG-7585.jpg',
+				'https://i.postimg.cc/MG15jS82/IMG-7587.jpg',
+				'https://i.postimg.cc/P5gKxq9Q/IMG-7586.jpg',
+				'https://i.postimg.cc/QCF0Fk3L/IMG-7614.jpg',
+				'https://i.postimg.cc/NMJdGCZ7/IMG-7613.jpg',
+				'https://i.postimg.cc/ZRtd88pt/image.png'
 			];
 
 			let camera, scene, renderer;
@@ -22,14 +25,17 @@
 			var vector = new THREE.Vector3();
 			const objects = [];
 			const targets = { table: [], sphere: [], helix: [], grid: [] };
-			window.onscroll = () => window.scroll(0, 0);
+			//window.onscroll = () => window.scroll(0, 0);
 			
 			init();
 			animate();
 
 			function init() {
-
-				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+				let aspect = window.innerWidth / window.innerHeight
+				if (window.innerWidth / window.innerHeight < 0.8){
+					aspect = 1;
+				}	
+				camera = new THREE.PerspectiveCamera( 40, 2, 1, 10000 );
 				camera.position.z = 3000;
 
 				scene = new THREE.Scene();
@@ -40,14 +46,23 @@
 				for ( let i = 0; i < table.length; i += 1 ) {
 
 					const element = document.createElement( 'div' );
-					element.className = 'element';
+					element.className = '_element';
 					//element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
 
 					const image = document.createElement( 'img' );
-					image.className = 'element';
+					image.className = '_element';
 					image.draggable = 'false';
 					image.selectable = 'false';
 					image.src = table[i];
+					//image.style.minWidth = "500px";
+					//image.style.maxWidth = "90%";
+					//document.getElementById('button').innerHTML = screen.width / screen.height;
+					if (screen.width / screen.height < 0.8) {
+						//image.style.width = "100%";
+						element.style.minWidth = "90rem";
+						image.style.width = "90rem";
+						console.log(window.innerWidth / window.innerHeight, window.innerWidth, image.style.minWidth)
+					}
 					//number.textContent = ( i / 5 ) + 1;
 					//image.style.width = '150px';
 					//image.style.height = '80px';
@@ -73,48 +88,21 @@
 					scene.add( objectCSS );
 
 					objects.push( objectCSS );
-
-					//
-
-					const object = new THREE.Object3D();
-					object.position.x = ( table[ i + 3 ] * 500 ) - 1330;
-					object.position.y = - ( table[ i + 4 ] * 180 ) + 1200;
-
-					targets.table.push( object );
-
+					
 				}
-
-				// sphere
 
 				const vector = new THREE.Vector3();
-
-				for ( let i = 0, l = objects.length; i < l; i ++ ) {
-
-					const phi = Math.acos( - 1 + ( 2 * i ) / l );
-					const theta = Math.sqrt( l * Math.PI ) * phi;
-
-					const object = new THREE.Object3D();
-
-					object.position.setFromSphericalCoords( 800, phi, theta );
-
-					vector.copy( object.position ).multiplyScalar( 2 );
-
-					object.lookAt( vector );
-
-					targets.sphere.push( object );
-
-				}
 
 				// helix
 
 				for ( let i = 0, l = objects.length; i < l; i ++ ) {
 
-					const theta = i * 0.4 + Math.PI;
-					const y = - ( i * 8 ) + 300;
+					const theta = i * (Math.PI * 2) / l;
+					const y = 200;
 
 					const object = new THREE.Object3D();
 
-					object.position.setFromCylindricalCoords( 2400, theta, y );
+					object.position.setFromCylindricalCoords( 1800, theta, y );
 
 					vector.x = object.position.x * 2;
 					vector.y = object.position.y;
@@ -126,41 +114,22 @@
 
 				}
 
-				// grid
-
-				for ( let i = 0; i < objects.length; i ++ ) {
-
-					const object = new THREE.Object3D();
-
-					object.position.x = ( ( i % 5 ) * 400 ) - 800;
-					object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 0;
-					object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
-
-					targets.grid.push( object );
-
-				}
-
 				//
 
 				renderer = new CSS3DRenderer();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.getElementById( 'container' ).appendChild( renderer.domElement );
-				onscroll = (event) => { scene.rotation.y += 1; console.log('scrolling') };
+				//onscroll = (event) => { scene.rotation.y += 1; console.log('scrolling') };
 				//
 
 				controls = new OrbitControls( camera, renderer.domElement );
-				controls.minDistance = 4500;
-				controls.maxDistance = 4500;
+				controls.minDistance = 3600;
+				controls.maxDistance = 3600;
 				controls.minPolarAngle = Math.PI/2;
 				controls.maxPolarAngle = Math.PI/2;
 				controls.enableDamping = true;
-				controls.mouseButtons = {
-					LEFT: THREE.MOUSE.ROTATE,
-					MIDDLE: THREE.MOUSE.ROTATE,
-					RIGHT: THREE.MOUSE.PAN
-				}
 				controls.dampingFactor = 0.05;
-				controls.rotateSpeed = 0.25;
+				controls.rotateSpeed = 0.35;
 				controls.addEventListener( 'change', render );
 				var spherical = new THREE.Spherical();
 				spherical.radius = controls.getDistance();
@@ -208,12 +177,12 @@
 			}
 
 			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
+				//document.getElementById('button').innerText = screen.width + " - " + window.innerWidth;
+				//camera.aspect = renderer.domElement.innerWidth / renderer.domElement.innerHeight;
 				camera.updateProjectionMatrix();
-
+				//camera.aspect = canvas.clientWidth / canvas.clientHeight;
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
+				
 				render();
 
 			}
@@ -232,7 +201,7 @@
 					
 					//console.log('p' + i , targets.helix.length);
 					
-					document.getElementById('p' + i).style.opacity = 100 - (targets.helix[i].position.distanceTo(camera.position) - 2250) / 7 + '%';
+					document.getElementById('p' + i).style.opacity = 100 - (targets.helix[i].position.distanceTo(camera.position) - 2250) / 4 + '%';
 				
 				}
 
