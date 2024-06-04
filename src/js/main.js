@@ -309,7 +309,8 @@ window.addEventListener("DOMContentLoaded", () => {
     if (instance && window.matchMedia("(min-width: 1025px").matches) {
       instance.on("slideChange", function (e) {
         if (instance.activeIndex == 0) {
-          header.style.transform = null;
+          header.style.transform = "translateY(-100%)";
+          //header.style.visibility = "hidden";
           header.classList.remove("logo-down");
           header.classList.remove("is-third");
           header.classList.remove("active");
@@ -326,6 +327,10 @@ window.addEventListener("DOMContentLoaded", () => {
           header.style.transform = "translateY(-110%)";
           menuBtn.removeEventListener("click", defaultMenu);
           menuBtn.addEventListener("click", progressMenu);
+        } else if (instance.activeIndex == 0) {
+            header.style.transform = "translateY(-100%)";
+            menuBtn.removeEventListener("click", progressMenu);
+            menuBtn.addEventListener("click", defaultMenu);
         } else {
           header.style.transform = null;
           menuBtn.removeEventListener("click", progressMenu);
