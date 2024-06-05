@@ -11,12 +11,6 @@
 				'https://i.postimg.cc/P5gKxq9Q/IMG-7586.jpg',
 				'https://i.postimg.cc/QCF0Fk3L/IMG-7614.jpg',
 				'https://i.postimg.cc/NMJdGCZ7/IMG-7613.jpg',
-				'https://i.postimg.cc/ZRtd88pt/image.png',
-				'https://i.postimg.cc/9QRJC98f/IMG-7585.jpg',
-				'https://i.postimg.cc/MG15jS82/IMG-7587.jpg',
-				'https://i.postimg.cc/P5gKxq9Q/IMG-7586.jpg',
-				'https://i.postimg.cc/QCF0Fk3L/IMG-7614.jpg',
-				'https://i.postimg.cc/NMJdGCZ7/IMG-7613.jpg',
 				'https://i.postimg.cc/ZRtd88pt/image.png'
 			];
 
@@ -37,72 +31,58 @@
 				}	
 				camera = new THREE.PerspectiveCamera( 40, 2, 1, 10000 );
 				camera.position.z = 3000;
-
+				
 				scene = new THREE.Scene();
 				//scene.fog = new THREE.Fog('0xFFFFFF', 100, 500);
-				
 				// table
+				
+				for (let p = 0; p < 6; p++) {
+					
+					for ( let i in table ) {
 
-				for ( let i = 0; i < table.length; i += 1 ) {
-
-					const element = document.createElement( 'div' );
-					element.className = '_element';
-					//element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
-
-					const image = document.createElement( 'img' );
-					image.className = '_element';
-					image.draggable = 'false';
-					image.selectable = 'false';
-					image.src = table[i];
-					//image.style.minWidth = "500px";
-					//image.style.maxWidth = "90%";
-					//document.getElementById('button').innerHTML = screen.width / screen.height;
-					if (screen.width / screen.height < 0.8) {
-						//image.style.width = "100%";
-						element.style.minWidth = "90rem";
-						image.style.width = "90rem";
-						console.log(window.innerWidth / window.innerHeight, window.innerWidth, image.style.minWidth)
+						const element = document.createElement( 'div' );
+						element.className = '_element';
+						//element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+						//element.style.maxWidth = "50%";
+						const image = document.createElement( 'img' );
+						image.className = '_element';
+						image.draggable = 'false';
+						image.selectable = 'false';
+						image.src = table[i];
+						image.style.height = "45rem";
+						image.style.width = "auto";
+						if (screen.width / screen.height < 0.8) {
+							//image.style.width = "70rem";
+							element.style.width = "45rem";
+							//image.style.width = "90rem";
+							console.log(window.innerWidth / window.innerHeight, window.innerWidth, image.style.minWidth)
+						}
+				
+						element.appendChild( image );
+						let id = i / 1 + 1 + p / 1 * table.length;
+						element.id = 'p' + id; 
+						console.log(element.id, (Number(i) + 1) * (Number(p) + 1), i, p);
+						const objectCSS = new CSS3DObject( element );
+						element.parent = objectCSS;
+						scene.add( objectCSS );
+	
+						objects.push( objectCSS );
+					
 					}
-					//number.textContent = ( i / 5 ) + 1;
-					//image.style.width = '150px';
-					//image.style.height = '80px';
-					
-					element.appendChild( image );
-
-					/**const symbol = document.createElement( 'div' );
-					symbol.className = 'symbol';
-					symbol.textContent = table[ i ];
-					element.appendChild( symbol );
-
-					const details = document.createElement( 'div' );
-					details.className = 'details';
-					details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
-					element.appendChild( details );**/
-					element.id = 'p' + i; 
-					console.log(element.id);
-					const objectCSS = new CSS3DObject( element );
-					element.parent = objectCSS;
-					objectCSS.position.x = Math.random() * 4000 - 2000;
-					objectCSS.position.y = Math.random() * 4000 - 2000;
-					objectCSS.position.z = Math.random() * 4000 - 2000;
-					scene.add( objectCSS );
-
-					objects.push( objectCSS );
-					
 				}
-
+				
 				const vector = new THREE.Vector3();
 
 				// helix
 
 				for ( let i = 0, l = objects.length; i < l; i ++ ) {
 
-					const theta = i * (Math.PI * 2) / l;
-					const y = 200;
-
+					const theta = i * (Math.PI * 2) / l ;
+					const y = (i > objects.length / 2) ? (parseInt(objects.length / 2) * (- 7) + (i * 7) + 60) : (- i * 7) + 200;
+					console.log('y: ', y, parseInt(objects.length / 2));
 					const object = new THREE.Object3D();
 
-					object.position.setFromCylindricalCoords( 1800, theta, y );
+					object.position.setFromCylindricalCoords( 3000, theta, y );
 
 					vector.x = object.position.x * 2;
 					vector.y = object.position.y;
@@ -113,9 +93,6 @@
 					targets.helix.push( object );
 
 				}
-
-				//
-
 				renderer = new CSS3DRenderer();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.getElementById( 'container' ).appendChild( renderer.domElement );
@@ -123,13 +100,15 @@
 				//
 
 				controls = new OrbitControls( camera, renderer.domElement );
-				controls.minDistance = 3600;
-				controls.maxDistance = 3600;
+				controls.minDistance = 4400;
+				controls.maxDistance = 4400;
 				controls.minPolarAngle = Math.PI/2;
 				controls.maxPolarAngle = Math.PI/2;
+				//controls.minAzimuthAngle = 0;
+				//controls.maxAzimuthAngle = Math.PI - Math.PI/12;
 				controls.enableDamping = true;
-				controls.dampingFactor = 0.05;
-				controls.rotateSpeed = 0.35;
+				controls.dampingFactor = 0.1;
+				controls.rotateSpeed = 0.2;
 				controls.addEventListener( 'change', render );
 				var spherical = new THREE.Spherical();
 				spherical.radius = controls.getDistance();
@@ -186,30 +165,34 @@
 				render();
 
 			}
-			
-			
-	
+
 			function animate() {
 
 				requestAnimationFrame( animate );
 
 				TWEEN.update();
-
+				
 				controls.update();
-				
-				for (let i in targets.helix) {
-					
-					//console.log('p' + i , targets.helix.length);
-					
-					document.getElementById('p' + i).style.opacity = 100 - (targets.helix[i].position.distanceTo(camera.position) - 2250) / 4 + '%';
-				
-				}
+				let line = new THREE.Line3();
+				let spherical = new THREE.Spherical().setFromVector3(camera.position);
+				//console.log('theta: ', THREE.MathUtils.radToDeg(spherical.theta))
 
-				targets.helix[0].updateMatrixWorld();
-		
-				//document.documentElement.style.setProperty('--brightness', '1%');
-				
-				//console.log(targets.helix[0].position.distanceTo(camera.position) - 500);
+				//console.log('p' + 0 , targets.helix[0].position.distanceTo(camera.position), document.getElementById('p' + 0).style.opacity, Number(document.getElementById('p' + i).style.opacity), vector.distanceTo(camera.position));
+				if (spherical.theta > Math.PI) {
+					//camera.position.y = spherical.theta
+				}
+				let closestTarget = 1500;
+				for (let i in targets.helix) {
+					line.set(camera.position, new THREE.Vector3( 0, 0, 0 ));
+					line.closestPointToPoint(targets.helix[i].position, false, vector);
+					//document.getElementById('p' + (Number(i) + 1)).style.opacity = 100 - (targets.helix[i].position.distanceTo(camera.position) - 2250) / 4 + '%';
+					document.getElementById('p' + (i/1 + 1)).style.opacity = 100 - parseInt(((vector.distanceTo(camera.position) - 1400)/1400)*1000) + "%";
+					//console.log(controls.getDistance(targets.helix[i].position))
+					if (camera.position.distanceTo(targets.helix[i].position) < 1420) {
+						camera.position.y = targets.helix[i].position.y - 200;
+						//console.log(camera.position.distanceTo(targets.helix[i].position))
+					}
+				}
 
 			}
 
